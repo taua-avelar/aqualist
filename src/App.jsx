@@ -25,6 +25,7 @@ function App() {
     cores: ''
   });
   const [corais, setCorais] = useState([]);
+  const [showFilters, setShowFilters] = useState(true); // Estado para controle de visibilidade
 
   const opcoes = (chave) => [...new Set(coraisData.map(item => item[chave]))];
 
@@ -66,36 +67,39 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, justifyContent: 'center', maxWidth: '100vw' }}>
-      <div className="header" style={{ padding: 20, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, zIndex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: 20 }}>
-      <input
-        type="text"
-        value={filtroTexto}
-        onChange={e => setFiltroTexto(e.target.value)}
-        placeholder="Pesquisar..."
-        style={{ width: '30%', marginBottom: 20 }}
-      />
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-      {Object.keys(filtros).map(chave => (
-        <div key={chave}>
-          <label style={{ display: 'block', fontWeight: 'bold', alignItems: 'center' }}>
-            {iconMap[chave]}
-            <span style={{ marginLeft: '10px' }}>{`${chave.charAt(0).toUpperCase() + chave.slice(1)}`}</span>
-          </label>
-          <select
-            value={filtros[chave]}
-            onChange={e => setFiltros({...filtros, [chave]: e.target.value})}
-            style={{ width: '100%', marginBottom: 20 }}
-          >
-            <option value="">{`Qualquer ${chave}`}</option>
-            {opcoes(chave).map(opcao => (
-              <option key={opcao} value={opcao}>{opcao}</option>
+      <Button variant="contained" onClick={() => setShowFilters(!showFilters)} style={{ position: 'fixed', top: 20, right: 20, zIndex: 2 }}>Filtrar</Button>
+      {showFilters && (
+        <div className="header" style={{ padding: 20, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, zIndex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: 20 }}>
+          <input
+            type="text"
+            value={filtroTexto}
+            onChange={e => setFiltroTexto(e.target.value)}
+            placeholder="Pesquisar..."
+            style={{ width: '30%', marginBottom: 20 }}
+          />
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {Object.keys(filtros).map(chave => (
+              <div key={chave}>
+                <label style={{ display: 'block', fontWeight: 'bold', alignItems: 'center' }}>
+                  {iconMap[chave]}
+                  <span style={{ marginLeft: '10px' }}>{`${chave.charAt(0).toUpperCase() + chave.slice(1)}`}</span>
+                </label>
+                <select
+                  value={filtros[chave]}
+                  onChange={e => setFiltros({...filtros, [chave]: e.target.value})}
+                  style={{ width: '100%', marginBottom: 20 }}
+                >
+                  <option value="">{`Qualquer ${chave}`}</option>
+                  {opcoes(chave).map(opcao => (
+                    <option key={opcao} value={opcao}>{opcao}</option>
+                  ))}
+                </select>
+              </div>
             ))}
-          </select>
+          </div>
+          <Button variant="contained" onClick={resetarFiltros} style={{ marginBottom: '20px', maxWidth: 250 }}>Resetar Filtros</Button>
         </div>
-      ))}
-      </div>
-      <Button variant="contained" onClick={resetarFiltros} style={{ marginBottom: '20px', maxWidth: 250 }}>Resetar Filtros</Button>
-      </div>
+      )}
       {corais.length ? corais.map(coral => (
         <MultiActionAreaCard key={coral.id} coral={coral} />
       )) : <div>Nenhum resultado</div>}
