@@ -1,5 +1,4 @@
-// FilterHeader.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import CategoryIcon from '@mui/icons-material/Category';
 import PetsIcon from '@mui/icons-material/Pets';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -21,17 +20,17 @@ const iconMap = {
     cores: <PaletteIcon />
 };
 
-function FilterHeader({ filtroTexto, setFiltroTexto, filtros, setFiltros, resetarFiltros, coraisData }) {
+function FilterHeader({ filtroTexto, setFiltroTexto, filtros, setFiltros, resetarFiltros, data }) {
     const opcoes = (chave) => {
-        const allValues = coraisData.flatMap(item => 
-            Array.isArray(item[chave]) ? item[chave].map(color => color.trim().toLowerCase()) : [item[chave].trim().toLowerCase()]
+        const allValues = data.flatMap(item => 
+            Array.isArray(item[chave]) ? item[chave].map(value => value.trim().toLowerCase()) : [item[chave].trim().toLowerCase()]
         );
         const uniqueValues = Array.from(new Set(allValues));
         return uniqueValues;
     };
 
     return (
-        <div className="header" style={{ padding: 20, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, zIndex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: 20 }}>
+        <div className="header" style={{ padding: 20, display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, zIndex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: 20, width: '700px' }}>
             <input
                 type="text"
                 value={filtroTexto}
@@ -51,7 +50,7 @@ function FilterHeader({ filtroTexto, setFiltroTexto, filtros, setFiltros, reseta
                             onChange={e => setFiltros({ ...filtros, [chave]: e.target.value })}
                             style={{ width: '100%', marginBottom: 20 }}
                         >
-                            <option value="">{`Qualquer ${chave}`}</option>
+                            <option value="">{chave}</option>
                             {opcoes(chave).map(opcao => (
                                 <option key={opcao} value={opcao}>{opcao}</option>
                             ))}
